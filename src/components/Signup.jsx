@@ -1,7 +1,47 @@
+import { isEmail, isNotEmpty, hasMinLength, isEqualToOtherValue } from '../util/validation';
+
 export default function Signup() {
   function signupAction(formData) {
-    const enteredEmail = formData.get('email');
-    console.log(enteredEmail);
+    const email = formData.get('email');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirm-password');
+    const fistName = formData.get('first-name');
+    const lastName = formData.get('last-name');
+    const role = formData.get('role');
+    const terms = formData.get('terms');
+    const acquisitionChannels = formData.getAll('acquisition');
+
+    const errors = [];
+
+    if (!isEmail(email)) {
+      errors.push('Please provide a valid email.');
+    }
+
+    if (!isNotEmpty(password) || !hasMinLength(password, 6)) {
+      errors.push('Please provide a password with at least six characters.');
+    }
+
+    if (!isEqualToOtherValue(password, confirmPassword)) {
+      errors.push('Passwords do not match.');
+    }
+
+    if (!isNotEmpty(fistName) || !isNotEmpty(lastName)) {
+      errors.push('Please provide both your first and last name.');
+    }
+
+    if (!isNotEmpty(role)) {
+      errors.push('Please select a role.');
+    }
+
+    if (!terms) {
+      errors.push('You must agree to the terms and conditions.');
+    }
+
+    if (acquisitionChannels.length === 0) {
+      errors.push('Please select at least one acquisition channel.');
+    }
+
+    console.log(errors);
   }
 
   return (
@@ -45,7 +85,7 @@ export default function Signup() {
       </div>
 
       <div className="control">
-        <label htmlFor="phone">What best describes your role?</label>
+        <label htmlFor="role">What best describes your role?</label>
         <select id="role" name="role">
           <option value="student">Student</option>
           <option value="teacher">Teacher</option>
